@@ -6,7 +6,7 @@ Trabalhos desenvolvidos em Linguagem C.
 $ gcc -Wall exemplo.c  
 ```
 
-- `T2` Solitaire é um criptosistema projetado por Bruce Schneier para o escritor Neal Stephenson utilizar em seu livro Cryptonomicon (leitura recomendada).Este trabalho implementa uma versão em C do mesmo utilizando estruturas de dados dinâmicas que facilitem sua implementação(LISTAS).
+- `T2` Solitaire é um criptosistema projetado para criptografar mensagens utilizando apenas um baralho, sua lógica consiste em que apenas o enviador e o receptor da mensagem sabem a posição inicial correta do baralho.Este trabalho implementa uma versão em C do mesmo utilizando estruturas de dados dinâmicas que facilitem sua implementação(LISTAS).
 
 ```
 $ gcc -Wall exemplo.c  
