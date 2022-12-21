@@ -69,7 +69,7 @@ char convertToUppercase(char caracter){
     return caracter;
 }
 
-struct stMsg *le_msg(struct stMsg *list){
+struct stMsg *input_msg(struct stMsg *list){
   FILE *arq;
   char caracter;
   int max_char = 150;
@@ -163,7 +163,7 @@ int main(){
     struct stMsg *ptr_msg = NULL; //cria lista vazia 
     struct stCard *ptr_card = NULL; //cria baralho vazio
 
-    ptr_msg = le_msg(ptr_msg);
+    ptr_msg = input_msg(ptr_msg);
 
     ptr_card = createDeck(ptr_card);
     
