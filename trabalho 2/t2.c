@@ -91,12 +91,12 @@ struct stMsg *input_msg(struct stMsg *list){
 // recebe um char e retorna o valor numérico de  1 a 26
 int letterValue(char c){
   for(int i=0;i < 26;i++){
-    if(c == ('a'+i))
+    if(c == ('A'+i))
       return i+1;
   }
   return 0;
 }
-
+//**********************************************************************************
 struct stCard *allocationMemoryCard(struct stCard *ptr){
   ptr = (struct stCard *) malloc(sizeof(struct stCard));
   if(ptr == NULL) //ERROR memory allocation
@@ -105,9 +105,9 @@ struct stCard *allocationMemoryCard(struct stCard *ptr){
     return ptr;
 }
 
-struct stCard *createJoker(struct stCard *ptr, int id){
+struct stCard *createJoker(struct stCard *ptr, int id, int v){
   ptr->index = id;
-  ptr->value = 14;
+  ptr->value = v;
   ptr->naipe = 5;
   return ptr;
 }
@@ -132,11 +132,11 @@ struct stCard *createDeck(struct stCard *list){
     }
   }
   //Joker A 
-  aux = createJoker(aux,53);
+  aux = createJoker(aux,53,14);
   aux->next = allocationMemoryCard(aux->next);
   aux = aux->next;
   //Joker B
-  aux = createJoker(aux,54);
+  aux = createJoker(aux,54,15);
   aux->next = NULL;
 
 
@@ -157,6 +157,45 @@ void showDeck(struct stCard *list){
   printf("\n");
 }
 
+struct stCard *searchDeck(int id, struct stCard *list){
+  struct stCard *aux = list;
+  while(aux != NULL){
+    if(aux->index == id)
+      return aux;
+      
+    aux = aux->next;
+  }
+  return NULL;
+}
+//**********************************************************************************
+struct stCard *moveCardDown(struct stCard *list, int id, int moves){
+  struct stCard *aux = list, *aux2, *aux3;
+
+  while(aux != NULL){
+    if(aux->index == id)
+      for(int i=0;i < moves;i++){
+        aux2 =  aux;                 //guarda o ponteiro pra DOIS
+        aux->next = aux->next->next; //UM aponta para TRES
+        aux3 = aux->next->next;      //guarda o ponteiro pra QUATRO
+        aux->next->next = aux2;      //TRES aponta para DOIS
+        aux2->next = aux3;           // DOIS aponta para QUATRO
+
+        aux = aux->next;  // reposiciona o ponteiro para mover a carta X vezes
+      }
+  }
+
+  return  list;
+}
+
+struct stMsg *encryptSolitaire(struct stMsg *listMsg, struct stCard *listCard){
+  
+  //Joker A
+  listCard = moveCardDown(listCard,53,1);
+
+
+  return listMsg;
+}
+
 
 
 int main(){
@@ -164,10 +203,11 @@ int main(){
     struct stCard *ptr_card = NULL; //cria baralho vazio
 
     ptr_msg = input_msg(ptr_msg);
-
     ptr_card = createDeck(ptr_card);
+
+    ptr_msg = encryptSolitaire(ptr_msg,ptr_card);
     
-    //showDeck(ptr_card);
+    showDeck(ptr_card);
     //showListLetter(ptr_msg);
 
     
