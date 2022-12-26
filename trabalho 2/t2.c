@@ -168,32 +168,36 @@ struct stCard *searchDeck(int id, struct stCard *list){
   return NULL;
 }
 //**********************************************************************************
-struct stCard *moveCardDown(struct stCard *list, int id, int moves){
-  struct stCard *aux = list, *aux2, *aux3;
+struct stCard *predecessor(struct stCard *list, int v){
+  struct stCard *aux = list, *ptrAnt = NULL;
 
-  while(aux != NULL){
-    if(aux->index == id)
-      for(int i=0;i < moves;i++){
-        aux2 =  aux;                 //guarda o ponteiro pra DOIS
-        aux->next = aux->next->next; //UM aponta para TRES
-        aux3 = aux->next->next;      //guarda o ponteiro pra QUATRO
-        aux->next->next = aux2;      //TRES aponta para DOIS
-        aux2->next = aux3;           // DOIS aponta para QUATRO
-
-        aux = aux->next;  // reposiciona o ponteiro para mover a carta X vezes
+  if(aux != NULL){
+      while(aux->index != v){
+        ptrAnt = aux;
+        aux = aux->next;
+        if(aux == NULL){
+          return NULL;
+        }
       }
-  }
 
-  return  list;
+  }
+  return ptrAnt;
 }
 
-struct stMsg *encryptSolitaire(struct stMsg *listMsg, struct stCard *listCard){
+struct stCard *moveCardDown(struct stCard *list, int id, int moves){
+    
+    
+  return list;
+}
+
+struct stCard *encryptSolitaire(struct stCard *list){
   
   //Joker A
-  listCard = moveCardDown(listCard,53,1);
+  //ERRO ESTA AQUI
+  list = moveCardDown(listCard,53,1);
 
 
-  return listMsg;
+  return list;
 }
 
 
@@ -205,7 +209,7 @@ int main(){
     ptr_msg = input_msg(ptr_msg);
     ptr_card = createDeck(ptr_card);
 
-    ptr_msg = encryptSolitaire(ptr_msg,ptr_card);
+    ptr_card = encryptSolitaire(ptr_card);
     
     showDeck(ptr_card);
     //showListLetter(ptr_msg);
