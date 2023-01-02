@@ -185,7 +185,28 @@ struct stCard *predecessor(struct stCard *list, int v){
 }
 
 struct stCard *moveCardDown(struct stCard *list, int id, int moves){
-    
+  struct stCard *aux, *aux2, *aux3;
+
+  for(int i=0;i < moves;i++){
+
+    aux = predecessor(list,id);
+
+    if(aux->next->next == NULL){ // CARTA EM QUESTÃO NO FINAL DO BARALHO
+
+      aux3 = list->next; // ponteiro para segunda posição da lista
+      list->next = aux->next; // insere na segunda posição
+      aux->next->next = aux3;
+      aux->next = NULL; // penultima posição baralho vira última
+
+    }else{
+      //ANTES 1->2->3->4
+      aux2 = aux->next;  //guarda ponteiro para DOIS
+      aux->next = aux2->next;  // faz UM apontar para TRES
+      aux2->next = aux->next->next; // faz DOIS apontar para QUATRO
+      aux->next->next = aux2;    // faz TRES apontar para DOIS
+      //DEPOIS 1->3->2->4
+    }
+  }
     
   return list;
 }
@@ -193,8 +214,9 @@ struct stCard *moveCardDown(struct stCard *list, int id, int moves){
 struct stCard *encryptSolitaire(struct stCard *list){
   
   //Joker A
-  //ERRO ESTA AQUI
-  list = moveCardDown(listCard,53,1);
+  list = moveCardDown(list,53,1);
+  //Joker B
+  list = moveCardDown(list,54,2);
 
 
   return list;
