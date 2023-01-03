@@ -184,6 +184,24 @@ struct stCard *predecessor(struct stCard *list, int v){
   return ptrAnt;
 }
 
+struct stCard *predecessorIndiferent(struct stCard *list, int v, int i){
+  struct stCard *aux = list, *ptrAnt = NULL;
+  int cont = 1;
+
+  if(aux != NULL){
+      while((aux->value != v)||(cont != i)){
+        ptrAnt = aux;
+        aux = aux->next;
+        if(aux == NULL)
+          return NULL;
+        if(aux->value == v)
+          cont++;
+      }
+
+  }
+  return ptrAnt;
+}
+
 struct stCard *moveCardDown(struct stCard *list, int id, int moves){
   struct stCard *aux, *aux2, *aux3;
 
@@ -211,12 +229,55 @@ struct stCard *moveCardDown(struct stCard *list, int id, int moves){
   return list;
 }
 
+struct stCard *trocaFim(struct stCard *blocofim){
+  struct stCard *aux = blocofim, *ptrAnt = NULL; 
+
+  if(aux != NULL){
+      while(aux->next != NULL){
+        ptrAnt = aux;
+        aux = aux->next;
+        if(aux == NULL){
+          return NULL;
+        }
+      }
+
+  }
+  return ptrAnt;   
+    
+}
+
+struct stCard *tripleCut(struct stCard *list){
+    struct stCard *JokerA, *aux, *blocofim, *aux2, *JokerB, *aux3;
+
+    aux = predecessorIndiferent(list,5,1);
+    JokerA = aux->next;  // ptr primeiro joker
+  
+    aux2 = predecessorIndiferent(list,5,2);
+    JokerB = aux2->next;  //ptr segundo joker
+
+    blocofim = JokerB->next;    // ptr bloco fim
+
+    JokerB->next = list;
+    aux->next = NULL;    // ptr ultima carta
+    
+    if(blocofim == NULL)
+      list = JokerA;
+    else{
+      aux3 = trocaFim(blocofim);
+      list = blocofim;
+      aux3 = JokerA;
+    }
+}
+
 struct stCard *encryptSolitaire(struct stCard *list){
   
   //Joker A
   list = moveCardDown(list,53,1);
   //Joker B
   list = moveCardDown(list,54,2);
+  //Corte Triplo
+  //ERRO AQUI
+  list = tripleCut(list);
 
 
   return list;
