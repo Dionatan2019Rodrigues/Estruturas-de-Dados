@@ -72,7 +72,7 @@ char convertToUppercase(char caracter){
 struct stMsg *input_msg(struct stMsg *list){
   FILE *arq;
   char caracter;
-  int max_char = 150;
+  int max_char = 256;
 
   arq = fopen("input", "r");
   if (arq != NULL) {
@@ -95,6 +95,10 @@ int letterValue(char c){
       return i+1;
   }
   return 0;
+}
+
+char convertIntLetter(int i){
+  return 'A'+(i-1);
 }
 //**********************************************************************************
 struct stCard *allocationMemoryCard(struct stCard *ptr){
@@ -184,22 +188,59 @@ struct stCard *predecessor(struct stCard *list, int v){
   return ptrAnt;
 }
 
-struct stCard *predecessorIndiferent(struct stCard *list, int v, int i){
+struct stCard *predecessorIndiferent(struct stCard *list, int np, int i){
   struct stCard *aux = list, *ptrAnt = NULL;
-  int cont = 1;
+  int cont = 0;
 
-  if(aux != NULL){
-      while((aux->value != v)||(cont != i)){
-        ptrAnt = aux;
-        aux = aux->next;
-        if(aux == NULL)
-          return NULL;
-        if(aux->value == v)
-          cont++;
-      }
+  while(aux != NULL){
+    ptrAnt = aux;
+    if(aux->next->naipe == np)
+      cont ++;
 
+    if((aux->next->naipe == np) && (cont == i))
+      aux = NULL;
+    else
+      aux = aux->next;
   }
   return ptrAnt;
+}
+
+struct stCard *trocaFim(struct stCard *blocofim){
+  struct stCard *aux = blocofim, *ptrAnt = NULL; 
+
+  while(aux != NULL){
+    ptrAnt = aux;
+
+    aux = aux->next;
+
+  }
+  return ptrAnt;   
+    
+}
+
+struct stCard *tripleCut(struct stCard *list){
+    struct stCard *JokerA, *aux, *blocofim, *aux2, *JokerB, *aux3;
+
+    aux = predecessorIndiferent(list,5,1);    
+    JokerA = aux->next;  // ptr primeiro joker
+
+    aux2 = predecessorIndiferent(list,5,2);
+    JokerB = aux2->next;  //ptr segundo joker
+
+    blocofim = JokerB->next;    // ptr bloco fim
+
+    JokerB->next = list;
+    aux->next = NULL;    // ptr ultima carta
+
+    if(blocofim == NULL)
+      list = JokerA;
+    else{
+      aux3 = trocaFim(blocofim);
+      list = blocofim;
+      aux3->next = JokerA;
+    }
+    
+  return list;
 }
 
 struct stCard *moveCardDown(struct stCard *list, int id, int moves){
@@ -229,58 +270,113 @@ struct stCard *moveCardDown(struct stCard *list, int id, int moves){
   return list;
 }
 
-struct stCard *trocaFim(struct stCard *blocofim){
-  struct stCard *aux = blocofim, *ptrAnt = NULL; 
+struct stCard *predecessorValue(struct stCard *list, int v){
+  struct stCard *aux = list, *ptrAnt = NULL;
+  int cont = 0;
+  
+  while(aux != NULL){
+    ptrAnt = aux;
+    cont ++;
 
-  if(aux != NULL){
-      while(aux->next != NULL){
-        ptrAnt = aux;
-        aux = aux->next;
-        if(aux == NULL){
-          return NULL;
-        }
-      }
-
+    if(cont == v)
+      aux = NULL;
+    else
+      aux = aux->next;
   }
-  return ptrAnt;   
-    
+  return ptrAnt;
 }
 
-struct stCard *tripleCut(struct stCard *list){
-    struct stCard *JokerA, *aux, *blocofim, *aux2, *JokerB, *aux3;
+struct stCard *previousFim(struct stCard *baralho){
+  struct stCard *aux = baralho, *ptr = NULL;
 
-    aux = predecessorIndiferent(list,5,1);
-    JokerA = aux->next;  // ptr primeiro joker
-  
-    aux2 = predecessorIndiferent(list,5,2);
-    JokerB = aux2->next;  //ptr segundo joker
-
-    blocofim = JokerB->next;    // ptr bloco fim
-
-    JokerB->next = list;
-    aux->next = NULL;    // ptr ultima carta
-    
-    if(blocofim == NULL)
-      list = JokerA;
+  while(aux != NULL){
+    if(aux->next->next == NULL){
+      ptr = aux;
+      aux = NULL;
+    } 
     else{
-      aux3 = trocaFim(blocofim);
-      list = blocofim;
-      aux3 = JokerA;
+      aux = aux->next;
     }
+      
+  }
+  return ptr;
 }
 
-struct stCard *encryptSolitaire(struct stCard *list){
+struct stCard *countedCut(struct stCard *list){
+  struct stCard *cardFim, *aux, *aux2, *baralho;
   
+  cardFim = trocaFim(list);
+   
+  aux = predecessorValue(list,cardFim->value);
+  baralho = aux->next;
+  aux2 = previousFim(baralho);
+
+  aux2->next = aux;
+  aux->next = cardFim;
+
+  list = baralho;
+
+
+  return list;
+}
+
+struct stCard *modifyDeck(struct stCard *list){
+
   //Joker A
   list = moveCardDown(list,53,1);
   //Joker B
   list = moveCardDown(list,54,2);
   //Corte Triplo
-  //ERRO AQUI
   list = tripleCut(list);
-
+  //Corte Contado
+  list = countedCut(list);
 
   return list;
+}
+//**************************************************************************************
+int showKey(struct stCard *list){
+  struct stCard *aux = list;
+
+  for(int i = list->index; i >0 ;i--){
+    aux = aux->next;
+  }
+  return aux->index;
+}
+
+void encryptSolitaire(struct stCard *listCard, struct stMsg *listMsg){
+  struct stMsg *aux = listMsg;
+
+  showListLetter(listMsg);
+  printf("\n\n");
+  while(aux != NULL){
+
+    //Realiza todos cortes do baralho
+    listCard = modifyDeck(listCard);
+    //showDeck(listCard);
+
+    //Gera KeyCard
+    int KeyCard = showKey(listCard);
+
+    //Joker keyCard repete até não ser mais joker a keyCard
+    while(KeyCard > 52){
+      listCard = modifyDeck(listCard);
+      KeyCard = showKey(listCard);
+    }  
+    //printf("%d\n",KeyCard);
+
+    int cripto = letterValue(aux->letter) + letterValue(convertIntLetter(KeyCard));
+  
+    
+    aux->letter = convertIntLetter(cripto);
+
+    showListLetter(listMsg);
+
+
+    aux = aux->next;
+  }
+
+  
+  
 }
 
 
@@ -292,10 +388,8 @@ int main(){
     ptr_msg = input_msg(ptr_msg);
     ptr_card = createDeck(ptr_card);
 
-    ptr_card = encryptSolitaire(ptr_card);
-    
-    showDeck(ptr_card);
-    //showListLetter(ptr_msg);
+    encryptSolitaire(ptr_card,ptr_msg);
+  
 
     
     return 0;
