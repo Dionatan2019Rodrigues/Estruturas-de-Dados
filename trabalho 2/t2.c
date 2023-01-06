@@ -140,7 +140,7 @@ struct stCard *createDeck(struct stCard *list){
   aux->next = allocationMemoryCard(aux->next);
   aux = aux->next;
   //Joker B
-  aux = createJoker(aux,54,15);
+  aux = createJoker(aux,53,15);
   aux->next = NULL;
 
 
@@ -176,7 +176,7 @@ struct stCard *predecessor(struct stCard *list, int v){
   struct stCard *aux = list, *ptrAnt = NULL;
 
   if(aux != NULL){
-      while(aux->index != v){
+      while(aux->value != v){
         ptrAnt = aux;
         aux = aux->next;
         if(aux == NULL){
@@ -229,26 +229,31 @@ struct stCard *tripleCut(struct stCard *list){
 
     blocofim = JokerB->next;    // ptr bloco fim
 
-    JokerB->next = list;
-    aux->next = NULL;    // ptr ultima carta
-
-    if(blocofim == NULL)
-      list = JokerA;
+    if((list->naipe == 5)&&(trocaFim(blocofim)->naipe == 5)){ //joker nos extremos do baralho
+      return list;
+    }       
     else{
-      aux3 = trocaFim(blocofim);
-      list = blocofim;
-      aux3->next = JokerA;
+      JokerB->next = list;
+      aux->next = NULL;    // ptr ultima carta
+
+      if(blocofim == NULL)
+        list = JokerA;
+      else{
+        aux3 = trocaFim(blocofim);
+        list = blocofim;
+        aux3->next = JokerA;
+      }
     }
     
   return list;
 }
 
-struct stCard *moveCardDown(struct stCard *list, int id, int moves){
+struct stCard *moveCardDown(struct stCard *list, int v, int moves){
   struct stCard *aux, *aux2, *aux3;
 
   for(int i=0;i < moves;i++){
 
-    aux = predecessor(list,id);
+    aux = predecessor(list,v);
 
     if(aux->next->next == NULL){ // CARTA EM QUESTÃO NO FINAL DO BARALHO
 
@@ -311,7 +316,7 @@ struct stCard *countedCut(struct stCard *list){
   baralho = aux->next;
   aux2 = previousFim(baralho);
 
-  aux2->next = aux;
+  aux2->next = list;
   aux->next = cardFim;
 
   list = baralho;
@@ -323,9 +328,9 @@ struct stCard *countedCut(struct stCard *list){
 struct stCard *modifyDeck(struct stCard *list){
 
   //Joker A
-  list = moveCardDown(list,53,1);
+  list = moveCardDown(list,14,1);
   //Joker B
-  list = moveCardDown(list,54,2);
+  list = moveCardDown(list,15,2);
   //Corte Triplo
   list = tripleCut(list);
   //Corte Contado
@@ -343,15 +348,15 @@ int showKey(struct stCard *list){
   return aux->index;
 }
 
-void encryptSolitaire(struct stCard *listCard, struct stMsg *listMsg){
+void encryptSolitaire(struct stCard *listCard, struct stMsg *listMsg, int caso){
   struct stMsg *aux = listMsg;
+  int cripto;
 
   showListLetter(listMsg);
-  printf("\n\n");
   while(aux != NULL){
-
+    
     //Realiza todos cortes do baralho
-    listCard = modifyDeck(listCard);
+    listCard = modifyDeck(listCard);  
     //showDeck(listCard);
 
     //Gera KeyCard
@@ -362,34 +367,43 @@ void encryptSolitaire(struct stCard *listCard, struct stMsg *listMsg){
       listCard = modifyDeck(listCard);
       KeyCard = showKey(listCard);
     }  
-    //printf("%d\n",KeyCard);
 
-    int cripto = letterValue(aux->letter) + letterValue(convertIntLetter(KeyCard));
+    switch(caso){
+      case 1:   //CRIPTOGRAFAR
+        cripto = letterValue(aux->letter) + letterValue(convertIntLetter(KeyCard));
+        if(cripto > 26)
+          cripto -= 26;
+        break;
+      case 2: //DESCRIPTOGRAFAR
+        cripto = letterValue(aux->letter) - letterValue(convertIntLetter(KeyCard));
+        if(cripto < 1)
+          cripto += 26;
+        break;
+    }
+
   
-    
     aux->letter = convertIntLetter(cripto);
-
-    showListLetter(listMsg);
-
+    //showListLetter(listMsg);
 
     aux = aux->next;
   }
 
-  
-  
+  showListLetter(listMsg);
+  printf("\n\n");
+
 }
-
-
 
 int main(){
     struct stMsg *ptr_msg = NULL; //cria lista vazia 
     struct stCard *ptr_card = NULL; //cria baralho vazio
+    struct stCard *desCripto = NULL;
 
     ptr_msg = input_msg(ptr_msg);
     ptr_card = createDeck(ptr_card);
+    desCripto = createDeck(desCripto);
 
-    encryptSolitaire(ptr_card,ptr_msg);
-  
+    encryptSolitaire(ptr_card,ptr_msg,1);//criptografando
+    encryptSolitaire(desCripto,ptr_msg,2); //descriptografando
 
     
     return 0;
