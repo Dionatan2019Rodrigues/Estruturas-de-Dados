@@ -12,7 +12,7 @@ COPAS   3
 ESPADAS 4
 JOKER   5
 */
-
+  
 struct stCard{
     int index;
     int value;
