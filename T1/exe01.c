@@ -1,151 +1,145 @@
-/*Desenvolvido por Dionatan Rodrigues e Mateus Quadros*/
 #include <stdio.h>
 #include <stdlib.h>
 
- struct lista {
-    int row; 
-    int column;
-    int value;
-    struct lista *next;
-    
-};
+// Definindo a estrutura dos nós da matriz identidade
+typedef struct no {
+    int linha;
+    int coluna;
+    int valor;
+    struct no *prox;
+} No;
 
-struct identidade {
-    int ordem;
-    struct lista *prim;
-};
-
-struct lista *allocation_memory(struct lista *ptr){
- 
-  ptr = (struct lista *) malloc(sizeof(struct lista));
-  if(ptr == NULL){ //ERROR memory allocation
-    printf("ERRO DE ALOCAÇÃO");
-    return NULL;
-  }
-  else{ return ptr; } 
-    
+// Função para criar um nó da matriz identidade
+No* criarNo(int linha, int coluna, int valor) {
+    No *novoNo = (No*) malloc(sizeof(No));
+    novoNo->linha = linha;
+    novoNo->coluna = coluna;
+    novoNo->valor = valor;
+    novoNo->prox = NULL;
+    return novoNo;
 }
 
-struct identidade *le_dados(struct identidade *ptr_mat, int ordem){
+// Função para inserir um nó na matriz identidade
+void inserirNo(No **matriz, int linha, int coluna, int valor) {
+    No *novoNo = criarNo(linha, coluna, valor);
+    novoNo->prox = matriz[linha];
+    matriz[linha] = novoNo;
+}
 
-    printf ("passagem\n");
-    ptr_mat->prim = NULL;
-    printf ("passagem\n");
-    ptr_mat->prim = allocation_memory(ptr_mat->prim);
-    printf ("passagem\n");
-    struct lista *aux = ptr_mat->prim;
-    printf ("passagem\n");
-    int flag=1;
-    printf("\nDIGITE APENAS OS DADOS DOS TERMOS DIFERENTES DE ZERO DA SUA MATRIZ\n");
-
-    while(flag==1){
-
-        printf("linha: ");
-        scanf("%d",&aux->row);
-        printf("coluna: ");
-        scanf("%d",&aux->column); 
-        printf("valor: ");
-        scanf("%d",&aux->value);
-
-        printf("Mais um termo a ser informado? DIGITE 1, Não? digite outro número!");
-        scanf("%d",&flag);
-
-        if(flag==1)
-            aux = aux->next;
-        else 
-            aux->next = NULL;
-
+// Função para verificar se a matriz é identidade
+int ehIdentidade(No **matriz, int ordem) {
+    int i, j;
+    for (i = 0; i < ordem; i++) {
+        No *noAtual = matriz[i];
+        for (j = 0; j < ordem; j++) {
+            if (i == j && (noAtual == NULL || noAtual->coluna != j || noAtual->valor != 1)) {
+                return 0;
+            } else if (i != j && (noAtual != NULL && noAtual->coluna == j)) {
+                return 0;
+            }
+            if (noAtual != NULL && noAtual->coluna == j) {
+                noAtual = noAtual->prox;
+            }
+        }
     }
-    return ptr_mat;
-
+    return 1;
 }
 
-struct identidade *preenche_matrizz(struct identidade *ptr_mat, int ordem){
-
-    ptr_mat = le_dados(ptr_mat,ordem);
-
-}
-
-int le_ordem(){
-    int ordem;
-    printf("Digite a ordem de sua matriz identidade: ");
-    scanf("%d",&ordem);
-    return ordem;
-}
-
-/*
-struct lista *create_matriz(struct lista *ptr_mat, int ordem){
-    
-    ptr_mat = allocation_memory(ptr_mat);
-    struct lista *aux = ptr_mat;
-
-    for(int i=0;i < (ordem*ordem) ;i++){
-        if((i+1) != (ordem*ordem) ){
-            aux->next = allocation_memory(aux->next);
-        }else{
-            aux->next = NULL;
-        } 
-        aux = aux->next;
+// Função para preencher a matriz com os valores fornecidos pelo usuário
+void preencherMatriz(No **matriz, int ordem) {
+    int i, j, valor;
+    for (i = 0; i < ordem; i++) {
+        for (j = 0; j < ordem; j++) {
+            printf("Digite o valor para a posição [%d][%d]: ", i, j);
+            scanf("%d", &valor);
+            if (valor != 0 && valor != 1) {
+                printf("Valor inválido. Digite 0 ou 1.\n");
+                j--;
+            } else {
+                inserirNo(matriz, i, j, valor);
+            }
+        }
     }
-
-    return ptr_mat;
-
 }
 
-struct lista *preenche_matriz(struct lista *ptr_mat){
-
-    struct lista *aux = ptr_mat;
-
-    while(aux != NULL){
-        printf("Digite linha: ");
-        scanf("%d",&aux->row);
-        printf("Digite coluna: ");
-        scanf("%d",&aux->column); 
-        printf("Digite o valor: ");
-        scanf("%d",&aux->value);
-
-        aux = aux->next;
-    }
-
-    return ptr_mat;
-
-}
-
-void imprime_matriz(struct lista *ptr_mat,int ordem){
-
-    struct lista *aux = ptr_mat;
-
-    printf("\n");
-    for(int i=0;i<ordem;i++){
-        for(int j=0;j<ordem;j++){
-            printf("%d\t",aux->value);
-            aux = aux->next;
+// Função para imprimir a matriz
+void imprimirMatriz(No **matriz, int ordem) {
+    int i, j;
+    printf("Matriz:\n");
+    for (i = 0; i < ordem; i++) {
+        No *noAtual = matriz[i];
+        for (j = 0; j < ordem; j++) {
+            if (noAtual != NULL && noAtual->coluna == j) {
+                printf("%d ", noAtual->valor);
+                noAtual = noAtual->prox;
+            } else {
+                printf("0 ");
+            }
         }
         printf("\n");
     }
 }
 
-*/
+// Função para mostrar os elementos que violam a propriedade da identidade
+void mostrarViolacoes(No **matriz, int ordem) {
+    int i, j;
+    for (i = 0; i < ordem; i++) {
+        No *noAtual = matriz[i];
+        while (noAtual != NULL) {
+            if (noAtual->valor != 0 && noAtual->valor != 1) {
+                printf("Valor inválido na posição [%d][%d]: %d\n", noAtual->linha, noAtual->coluna, noAtual->valor);
+            } else if (i == noAtual->coluna && noAtual->valor != 1) {
+                printf("Valor diferente de 1 na diagonal principal na posição [%d][%d]: %d\n", noAtual->linha, noAtual->coluna, noAtual->valor);
+            } else if (i != noAtual->coluna && noAtual->valor != 0) {
+                printf("Valor diferente de 0 fora da diagonal principal na posição [%d][%d]: %d\n", noAtual->linha, noAtual->coluna, noAtual->valor);
+            }
+            noAtual = noAtual->prox;
+        }
+    }
+}
 
-int main()
-{
-    struct identidade *ptr_mat = NULL; 
+// Função para liberar a memória alocada pela matriz identidade
+void liberarMatriz(No **matriz, int ordem) {
+    int i;
+    for (i = 0; i < ordem; i++) {
+        No *noAtual = matriz[i];
+        while (noAtual != NULL) {
+            No *proxNo = noAtual->prox;
+            free(noAtual);
+            noAtual = proxNo;
+        }
+    }
+    free(matriz);
+}
 
-    int ordem = le_ordem();
+int main() {
+    int ordem;
+    printf("Digite a ordem da matriz: ");
+    scanf("%d", &ordem);
 
-    ptr_mat = preenche_matrizz(ptr_mat,ordem);
+    // Criando a matriz identidade vazia
+    No **matriz = (No**) malloc(ordem * sizeof(No*));
+    for (int i=0; i<ordem;i++) {
+        matriz[i] = NULL;
+    }
 
+    // Preenchendo a matriz com os valores fornecidos pelo usuário
+    preencherMatriz(matriz, ordem);
 
+    // Imprimindo a matriz
+    imprimirMatriz(matriz, ordem);
 
+    // Verificando se a matriz é identidade e mostrando as violações, se houverem
+    if (ehIdentidade(matriz, ordem)) {
+        printf("A matriz é identidade.\n");
+    } else {
+        printf("A matriz não é identidade.\n");
+        mostrarViolacoes(matriz, ordem);
+    }
 
-
-
-    //ptr_mat = create_matriz(ptr_mat,ordem);
-    //ptr_mat = preenche_matriz(ptr_mat);
-    //imprime_matriz(ptr_mat,ordem);
-
+    // Liberando a memória alocada pela matriz identidade
+    liberarMatriz(matriz, ordem);
 
     return 0;
 
 }
-
