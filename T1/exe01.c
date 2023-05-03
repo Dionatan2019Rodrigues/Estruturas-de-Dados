@@ -40,14 +40,14 @@ struct identidade *le_dados(struct identidade *ptr_mat, int ordem){
 
     while(flag==1){
 
-        printf("Digite linha: ");
+        printf("linha: ");
         scanf("%d",&aux->row);
-        printf("Digite coluna: ");
+        printf("coluna: ");
         scanf("%d",&aux->column); 
-        printf("Digite o valor: ");
+        printf("valor: ");
         scanf("%d",&aux->value);
 
-        printf("Se existir mais um termo a ser informado DIGITE 1, caso contrario digite outro número!");
+        printf("Mais um termo a ser informado? DIGITE 1, Não? digite outro número!");
         scanf("%d",&flag);
 
         if(flag==1)
