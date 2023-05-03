@@ -10,23 +10,7 @@
     
 };
 
-struct identidade {
-    int ordem;
-    struct lista *prim;
-};
-
-struct identidade *aloca_identidade(struct identidade *ptr){
- 
-  ptr = (struct identidade *) malloc(sizeof(struct identidade));
-  if(ptr == NULL){ //ERROR memory allocation
-    printf("ERRO DE ALOCAÇÃO");
-    return NULL;
-  }
-  else{ return ptr; } 
-    
-}
-
-struct lista *aloca_lista(struct lista *ptr){
+struct lista *aloca_no(struct lista *ptr){
  
   ptr = (struct lista *) malloc(sizeof(struct lista));
   if(ptr == NULL){ //ERROR memory allocation
@@ -37,6 +21,49 @@ struct lista *aloca_lista(struct lista *ptr){
     
 }
 
+void criando_matriz(struct lista *ptr, int ordem){
+    struct lista *aux = ptr;
+
+    for(int i=0;i<ordem;i++){
+        aux = aloca_no(aux);
+        aux = aux->next;
+    }
+}
+
+void inserir_no(struct lista *ptr, int row, int column, int value){
+
+}
+
+void preencher_matriz(struct lista *ptr, int ordem){
+    int i, j, valor;
+    for (i=0;i<ordem;i++) {
+        for (j=0;j<ordem;j++) {
+            printf("Digite o valor para a posição [%d][%d]: ", i, j);
+            scanf("%d", &valor);
+            
+            
+        }
+    }
+}
+
+int main()
+{
+    struct lista *list = NULL; 
+
+    int ordem;
+    printf("Digite a ordem de sua matriz identidade: ");
+    scanf("%d",&ordem);
+
+    criando_matriz(list,ordem);
+
+    preencher_matriz(list, ordem);
+
+    return 0;
+
+}
+
+
+/*
 struct identidade *le_dados(struct identidade *ptr_mat){
 
     ptr_mat->prim = aloca_lista(ptr_mat->prim);
@@ -76,13 +103,6 @@ struct identidade *preenche_matriz(struct identidade *ptr_mat){
 
 }
 
-int le_ordem(){
-    int ordem;
-    printf("Digite a ordem de sua matriz identidade: ");
-    scanf("%d",&ordem);
-    return ordem;
-}
-
 void imprime_matriz(struct identidade *ptr_mat,int ordem){
     
     struct lista *aux = ptr_mat->prim;
@@ -102,21 +122,17 @@ void imprime_matriz(struct identidade *ptr_mat,int ordem){
         printf("\n");
     }
 }
+*/
 
-
-
-int main()
-{
-    struct identidade *ptr_mat = NULL; 
-
-    int ordem = le_ordem();
-
-    ptr_mat = aloca_identidade(ptr_mat);
-    ptr_mat = preenche_matriz(ptr_mat);
-
-    imprime_matriz(ptr_mat,ordem);
-
-    return 0;
-
+/*
+struct identidade *aloca_identidade(struct identidade *ptr){
+ 
+  ptr = (struct identidade *) malloc(sizeof(struct identidade));
+  if(ptr == NULL){ //ERROR memory allocation
+    printf("ERRO DE ALOCAÇÃO");
+    return NULL;
+  }
+  else{ return ptr; } 
+    
 }
-
+*/
