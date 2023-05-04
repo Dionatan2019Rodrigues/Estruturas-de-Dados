@@ -127,6 +127,20 @@ void mostra_violacoes(struct lista *ptr, int ordem){
     }
 }
 
+void libera_memoria(struct lista *ptr, int ordem){
+
+    struct lista *aux;
+
+    for(int i=0;i<ordem;i++){
+        for(int j=0;j<ordem;j++){
+            aux = ptr;
+            ptr = ptr->next;
+            free(aux);
+        }
+    }
+}
+
+
 int main()
 {
     struct lista *list = NULL; 
@@ -139,6 +153,7 @@ int main()
     valida_identidade(list,ordem);
     mostra_violacoes(list,ordem);
     
+    libera_memoria(list,ordem);
     return 0;
 
 }
