@@ -130,21 +130,15 @@ void mostra_violacoes(struct lista *ptr, int ordem){
 int main()
 {
     struct lista *list = NULL; 
-
     int ordem;
     printf("Digite a ordem de sua matriz identidade: ");
     scanf("%d",&ordem);
 
-    list = preencher_matriz(list, ordem);
-    
+    list = preencher_matriz(list, ordem); 
     imprime_matriz(list,ordem);
-
     valida_identidade(list,ordem);
-
     mostra_violacoes(list,ordem);
     
-    
-
     return 0;
 
 }
