@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-
  struct lista {
     int row; 
     int column;
