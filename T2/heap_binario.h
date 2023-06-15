@@ -2,7 +2,7 @@
 #define HEAPBINARIO_H
 
 typedef struct node_t{
-    int data;
+    char nome[50];
     int prio;
 }node;
 
@@ -13,18 +13,20 @@ typedef struct priority_queue{
 }prioQueue;
 
 //Autoexplicativo
-void swap(node *fila, int data1, int data2);
+//void swap(node *fila, int data1, int data2);
 
-void promove_elemento(node *fila, int size); 
+void cria_fila_vazia(prioQueue *fp, int capacity);
 
-//Inserção 
-void insert(node *fila, int data, int prio);
+//Inserção --------------------------------------------------------
+void promove_elemento(prioQueue *fila, int size); 
+ 
+void insert(prioQueue *fila, int prio, char *nome);
 
 //Impressão do nó e de seus filhos(dir/esq)
-void print_no(node *fila, int data);
+//void print_no(node *fila, int data);
 
-//Remoção do nó
-void remoção(node *fila, int data);
+//Remoção ---------------------------------------------------------
+//void remocao(prioQueue *fila, int data);
 
 
 #endif // HEAPBINARIO_H
