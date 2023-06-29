@@ -12,21 +12,25 @@ typedef struct priority_queue{
     int size;
 }prioQueue;
 
-//Autoexplicativo
-//void swap(node *fila, int data1, int data2);
+//Auxiliares ------------------------------------------------------
+prioQueue *cria_fila_vazia(int capacity);
 
-void cria_fila_vazia(prioQueue *fp, int capacity);
+void swap(prioQueue *fp, int pos1, int pos2);
 
 //Inserção --------------------------------------------------------
-void promove_elemento(prioQueue *fila, int size); 
+void promove_elemento(prioQueue *fp, int size); 
  
-void insert(prioQueue *fila, int prio, char *nome);
-
-//Impressão do nó e de seus filhos(dir/esq)
-//void print_no(node *fila, int data);
+void insert(prioQueue *fp, int prio, char *nome);
 
 //Remoção ---------------------------------------------------------
-//void remocao(prioQueue *fila, int data);
+void rebaixa_elemento(prioQueue *fp, int pai);
 
+void remocao(prioQueue *fila);
+
+//Impressão -------------------------------------------------------
+//do nó e de seus filhos(dir/esq)
+//void print_no(node *fila, int data);
+
+void print_array(prioQueue *fp);
 
 #endif // HEAPBINARIO_H

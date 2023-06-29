@@ -3,10 +3,23 @@
 
 int main(){
 
-    prioQueue *fp;
+    prioQueue *fp = cria_fila_vazia(15);
 
-    cria_fila_vazia(fp,15);
-    insert(fp,5,"Dione");
+
+    insert(fp,4,"Dione");
+    insert(fp,5,"eduardo");
+    insert(fp,2,"correa");
+    insert(fp,3,"rodrigues");
+
+    print_array(fp);
+    printf("\n\n");
+
+    remocao(fp);
+    print_array(fp);
+    printf("\n\n");
+
+    remocao(fp);
+    print_array(fp);
     
     return 0;
 }
