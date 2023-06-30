@@ -33,7 +33,6 @@ void promove_elemento(prioQueue *fp, int filho){
 
     while( (filho>0)&&(fp->heap[pai].prio < fp->heap[filho].prio)){
         swap(fp,filho,pai);
-        //0800 031 8000
         filho = pai;
         pai = (pai-1)/2;
     }
