@@ -2,24 +2,14 @@
 #include "heap_binario.h"
 
 int main(){
+    int capacity;
 
-    prioQueue *fp = cria_fila_vazia(15);
+    printf("Digite a capacidade máxima da sua fila: ");
+    scanf("%d",&capacity);
 
-
-    insert(fp,4,"Dione");
-    insert(fp,5,"eduardo");
-    insert(fp,2,"correa");
-    insert(fp,3,"rodrigues");
-
-    print_array(fp);
-    printf("\n\n");
-
-    remocao(fp);
-    print_array(fp);
-    printf("\n\n");
-
-    remocao(fp);
-    print_array(fp);
+    prioQueue *fp = cria_fila_vazia(capacity);    
     
+    menu(fp);
+
     return 0;
 }

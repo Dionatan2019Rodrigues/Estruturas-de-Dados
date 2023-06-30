@@ -46,7 +46,7 @@ void insert(prioQueue *fp, int prio, char *nome){
         return;
     }      
     if(fp->size == fp->capacity){
-        printf("Fila cheia!\n");
+        printf("\033[1;34mFila cheia!\033[0m\n");
         return;
     }
 
@@ -83,7 +83,7 @@ void remocao(prioQueue *fp){
         return;
     }      
     if(fp->size == 0){
-        printf("Fila VAZIA!\n");
+        printf("\033[1;34mFila VAZIA!\033[0m\n");
         return;
     }
 
@@ -93,12 +93,64 @@ void remocao(prioQueue *fp){
 }
 
 void print_array(prioQueue *fp){
+
     if (fp->size == 0) {
-        printf("Fila de prioridade vazia.\n");
+        printf("\033[1;34mFila de prioridade vazia.\033[0m\n");
         return;
     }
 
+    printf("--------------------------------------------\n");
+
     for(int i=0;i < fp->size;i++){
-        printf("%s: %d \n",fp->heap[i].nome, fp->heap[i].prio);
+        printf(" \033[1;31m\t%s: %d\033[0m\n",
+           fp->heap[i].nome, fp->heap[i].prio     //nó pai pintado em vermelho
+        ); 
+        
+        if((2*i)+1 >=  fp->size)                // filho da esquerda 
+            printf("esq.[vazio]\t");
+        else
+            printf("esq.[%s,%d] \t", fp->heap[(2*i)+1].nome, fp->heap[(2*i)+1].prio);
+
+        if((2*i)+2 >=  fp->size)                // filho da direita 
+            printf("dir.[vazio]\t");
+        else
+            printf("dir.[%s,%d] \t", fp->heap[(2*i)+2].nome, fp->heap[(2*i)+2].prio);
+
+        printf("\n\n");
     }
+}  
+
+void menu(prioQueue *fp){
+    int opcao,prio;
+    char nome[50];
+    do{
+        printf("\n------------Menu------------\n");
+        printf("1. Inserir elemento\n");
+        printf("2. Remover elemento\n");
+        printf("3. Imprimir Heap\n");
+        printf("0. Sair\n");
+        printf("Digite sua opção: ");
+        scanf("%d", &opcao);
+
+        switch (opcao){
+            case 1:
+                printf("Digite o nome e a prioridade do elemento a ser inserido: \n");
+                scanf("%50s", nome);scanf("%d", &prio);
+                insert(fp,prio,nome);
+                break;
+            case 2:
+                remocao(fp);
+                break;
+            case 3:
+                print_array(fp);
+                break;
+            case 0:
+                printf("Encerrando o programa.\n");
+                break;
+            default:
+                printf("Opção inválida\n");
+                break;
+        }
+
+    }while (opcao !=0);
 }

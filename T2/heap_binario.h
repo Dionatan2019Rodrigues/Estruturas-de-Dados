@@ -28,9 +28,10 @@ void rebaixa_elemento(prioQueue *fp, int pai);
 void remocao(prioQueue *fila);
 
 //Impressão -------------------------------------------------------
-//do nó e de seus filhos(dir/esq)
-//void print_no(node *fila, int data);
 
 void print_array(prioQueue *fp);
+
+// Menu -----------------------------------------------------------
+void menu(prioQueue *fp);
 
 #endif // HEAPBINARIO_H
