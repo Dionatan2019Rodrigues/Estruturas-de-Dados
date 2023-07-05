@@ -1,0 +1,2 @@
+Foi alterado a parte de exemplos do relatório onde inserimos duas novas seções.
+Uma seção explicando e exemplificando a inserção no heap e outra sobre a remoção.
